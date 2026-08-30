@@ -9,8 +9,8 @@ from app.services import memory_service
 
 
 _EXTRACT_PROMPT = """从用户消息中提取文档名称。
-只返回JSON: {"doc_name": "<文档名>"}
-如果无法确定，返回: {"doc_name": ""}
+只返回JSON: {{"doc_name": "<文档名>"}}
+如果无法确定，返回: {{"doc_name": ""}}
 用户消息: {query}"""
 
 _STEPS_PROMPT = """你是一名专业学习规划师。根据以下文档内容，为用户生成一份结构化的学习路线。
@@ -79,8 +79,9 @@ class RoadmapAgent:
         return "\n".join(lines)
 
     async def _extract_doc_name(self, query: str) -> str:
-        prompt = _EXTRACT_PROMPT.format(query=query)
         try:
+            # 模板渲染也放进 try：避免模板里的花括号等格式问题导致整个链路 500
+            prompt = _EXTRACT_PROMPT.format(query=query)
             resp = await self._llm.chat.completions.create(
                 model=self._model_light,
                 messages=[{"role": "user", "content": prompt}],
@@ -115,10 +116,11 @@ class RoadmapAgent:
             if not isinstance(steps, list):
                 return []
             validated = []
-            for i, step in enumerate(steps):
+            for step in steps:
                 if isinstance(step, dict) and step.get("title"):
                     validated.append({
-                        "id": i + 1,
+                        # 按保留下来的顺序连续重排，避免过滤掉无效项后 id 跳号（如 1,3）
+                        "id": len(validated) + 1,
                         "title": str(step.get("title", "")),
                         "detail": str(step.get("detail", "")),
                         "done": False,

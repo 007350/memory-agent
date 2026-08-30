@@ -78,3 +78,9 @@ logs/
 
 # Docker
 docker-compose.override.yml
+
+# 生成的文件（视频、动画输出）
+generated-videos/
+
+# LightRAG 解析后的输入文件（大文件，不进 Git）
+lightrag/inputs/__parsed__/
