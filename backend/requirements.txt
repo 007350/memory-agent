@@ -1,0 +1,11 @@
+fastapi==0.138.0
+uvicorn[standard]==0.34.0
+httpx==0.28.1
+pydantic==2.11.5
+pydantic-settings==2.14.2
+openai==2.49.0
+langgraph==1.2.6
+aiosqlite==0.22.1
+pytest==9.1.1
+pytest-asyncio==1.4.0
+lightrag-hku[api]==1.5.6

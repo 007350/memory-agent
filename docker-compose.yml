@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+  lightrag:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./lightrag:/app
+    environment:
+      - PYTHONUTF8=1
+      - PYTHONIOENCODING=utf-8
+    env_file:
+      - ./lightrag/.env
+    command: >
+      bash -c "pip install --no-cache-dir 'lightrag-hku[api]==1.5.6' && lightrag-server"
+    ports:
+      - "9621:9621"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9621/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/.env
+    depends_on:
+      lightrag:
+        condition: service_healthy
+    command: >
+      bash -c "pip install --no-cache-dir -r requirements.txt &&
+               uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    image: node:24-slim
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    environment:
+      - VITE_API_BASE=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: >
+      bash -c "npm install && npm run build && npm run preview -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5173:5173"

@@ -1,0 +1,80 @@
+# Environment (secrets — never commit real keys)
+.env
+.env.local
+.env.*.local
+
+# Secrets & credentials (never commit)
+*.pem
+*.key
+*.pfx
+*.keystore
+secrets/
+credentials*.json
+service-account*.json
+*.tfstate
+*.tfstate.backup
+.npmrc
+.netrc
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# Node
+node_modules/
+dist/
+.next/
+out/
+.nuxt/
+.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# 临时调试文件（不进入 Git）
+backend/temp_*.py
+backend/diag_latency.py
+backend/find_syntax.py
+backend/test_fstring*.py
+backend/test_prompt*.py
+
+# LightRAG 数据（本地索引，不进 Git）
+lightrag/data/
+
+# 本地数据库（含用户记忆数据，不进 Git）
+*.db
+*.sqlite
+*.sqlite3
+.tmp/
+
+# 日志
+*.log
+logs/
+
+# Docker
+docker-compose.override.yml

@@ -1,0 +1,106 @@
+/* Tool Call Display 样式 */
+.tool-calls {
+  margin: 8px 0 8px 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tool-call {
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.tool-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f0f3f6;
+  border-bottom: 1px solid #e1e4e8;
+  font-weight: 500;
+}
+
+.tool-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.tool-name {
+  flex: 1;
+  color: #24292f;
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tool-latency {
+  color: #6e7781;
+  font-size: 11px;
+  font-family: 'SF Mono', Monaco, monospace;
+}
+
+.tool-body {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tool-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tool-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #57606a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tool-code {
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 0;
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #24292f;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.tool-result {
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  padding: 8px;
+  font-family: 'SF Mono', Monaco, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #24292f;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.tool-error {
+  background: #fff3f3;
+  border: 1px solid #ffcccc;
+  border-radius: 4px;
+  padding: 8px;
+  color: #cf222e;
+  font-size: 12px;
+  line-height: 1.4;
+}
