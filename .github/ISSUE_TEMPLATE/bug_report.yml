@@ -1,0 +1,73 @@
+name: Bug report
+description: Something errors out or behaves differently from the README
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before you file: version mismatches between `fastapi` and `starlette` cause most import-time crashes.
+        Please paste the output of `pip show fastapi starlette | grep -E "Name|Version"` below.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected vs. what actually happened.
+      placeholder: |
+        Expected: clicking "upload" indexes the document.
+        Actual: the request returns 500 and the LightRAG window shows ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. cp backend/.env.example backend/.env, fill in keys
+        2. ./start.sh
+        3. open http://localhost:5173, ask "..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs / traceback
+      description: Full traceback, not just the last line. Remove any API keys first.
+      render: shell
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Which part?
+      options:
+        - Backend / API
+        - Agent routing or answer quality
+        - Memory system
+        - Roadmap / diagnosis
+        - Frontend UI
+        - LightRAG indexing
+        - Startup scripts / Docker
+        - Documentation
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: OS, Python, Node, fastapi/starlette/langgraph
+      placeholder: Windows 11, Python 3.11.15, Node 22, fastapi 0.138.0 / starlette 1.6.0 / langgraph 1.2.6
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I removed API keys from the logs above
+          required: true
+        - label: I searched existing issues for the same problem
+          required: true

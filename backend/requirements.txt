@@ -1,5 +1,12 @@
+# Backend runtime + test dependencies.
+# The LightRAG server runs as a separate process and is installed on its own:
+#   pip install "lightrag-hku[api]==1.5.6"
+# The backend only talks to it over REST (see app/services/lightrag_client.py),
+# so it does not need the LightRAG SDK — keeping it out makes installs much faster.
 fastapi==0.138.0
 uvicorn[standard]==0.34.0
+# Required by /documents/upload (UploadFile) — FastAPI raises at import time without it
+python-multipart==0.0.20
 httpx==0.28.1
 pydantic==2.11.5
 pydantic-settings==2.14.2
@@ -8,4 +15,3 @@ langgraph==1.2.6
 aiosqlite==0.22.1
 pytest==9.1.1
 pytest-asyncio==1.4.0
-lightrag-hku[api]==1.5.6

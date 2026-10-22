@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(D:/Dev/envs/lang/python.exe -c \"from app.routes.roadmap import router\")"
-    ]
-  }
-}

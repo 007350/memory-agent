@@ -127,13 +127,16 @@ class TestWebSearchTool:
     
     @pytest.mark.asyncio
     async def test_missing_api_key(self):
-        """测试缺少 API Key"""
+        """缺少 API Key 时直接抛 ToolExecutionError，且不发起任何网络请求"""
         tool = WebSearchTool()
         tool.api_key = ""
 
-        with patch.dict('os.environ', {}, clear=True):
-            with pytest.raises(ToolExecutionError, match="API key not configured"):
-                await tool.execute(query="test")
+        # 注意：这里刻意不 patch os.environ。用 clear=True 清空整个进程环境会在
+        # 退出时回写，一旦环境里存在超长变量（CI 注入的 token 等）就会抛
+        # "environment variable is longer than 32767 characters" 并把测试带崩。
+        # api_key 在 __init__ 里已经解析完毕，直接置空即可覆盖目标分支。
+        with pytest.raises(ToolExecutionError, match="API key not configured"):
+            await tool.execute(query="test")
 
     def test_api_key_falls_back_to_settings(self):
         """环境变量没有 FIRECRAWL_API_KEY 时，应从 settings（.env）读取 key"""

@@ -1,4 +1,4 @@
-﻿import os
+import os
 import pytest
 import pytest_asyncio
 
@@ -16,16 +16,17 @@ def disable_embedding(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
-def tmp_db():
-    """每个测试使用独立临时数据库文件，避免测试间状态污染。"""
-    db_dir = os.path.join(os.path.dirname(__file__), ".tmp")
-    os.makedirs(db_dir, exist_ok=True)
-    db_file = os.path.join(db_dir, "test_memory.db")
-    os.environ["MEMORY_DB_PATH"] = db_file
-    yield db_file
-    # 清理：删除临时数据库文件
-    if os.path.exists(db_file):
-        os.remove(db_file)
+def tmp_db(tmp_path):
+    """每个测试使用独立临时数据库文件，避免测试间状态污染。
+
+    用 pytest 的 tmp_path 分配唯一文件名，不再依赖"手动删除"来保证隔离：
+    一旦清理失败（文件被占用 / 权限不足），上一次的残留数据会让后续测试
+    读到重复行而集体误报。
+    """
+    db_file = tmp_path / "test_memory.db"
+    os.environ["MEMORY_DB_PATH"] = str(db_file)
+    yield str(db_file)
+    os.environ.pop("MEMORY_DB_PATH", None)
 
 
 @pytest.mark.asyncio

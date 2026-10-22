@@ -1,4 +1,4 @@
-﻿import os
+import os
 import pytest
 import pytest_asyncio
 from unittest.mock import AsyncMock, patch

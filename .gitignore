@@ -56,6 +56,21 @@ out/
 .DS_Store
 Thumbs.db
 
+# 本地 AI 编码助手的工作目录（个人环境配置与草稿，不进公开仓库）
+.claude/
+.zcode/
+.workbuddy/
+.agent/
+.cursor/
+.continue/
+
+# 个人草稿 / 一次性脚本（不应出现在仓库中）
+plan.md
+plans/
+write_plan.py
+scratch_*.py
+notes.md
+
 # 临时调试文件（不进入 Git）
 backend/temp_*.py
 backend/diag_latency.py

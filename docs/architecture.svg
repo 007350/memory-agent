@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" role="img" aria-label="memory-agent architecture: React client, FastAPI + LangGraph backend, LightRAG server, SQLite memory, OpenAI-compatible LLM">
+  <defs>
+    <style>
+      .box      { fill: #ffffff; stroke: #d8dceb; stroke-width: 1.5; }
+      .panel    { fill: #fbfbfe; stroke: #d8dceb; stroke-width: 1.5; }
+      .accent   { fill: #f3f0ff; stroke: #c3b7f0; stroke-width: 1.5; }
+      .api      { fill: #f6f7fd; stroke: #d8dceb; stroke-width: 1.5; stroke-dasharray: 6 4; }
+      .t-title  { font-family: -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif; font-size: 15px; font-weight: 650; fill: #1f2333; }
+      .t-sub    { font-family: -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif; font-size: 12px; fill: #6b7186; }
+      .t-chip   { font-family: -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif; font-size: 11.5px; fill: #3a3f55; }
+      .t-label  { font-family: -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif; font-size: 11px; fill: #8a90a6; }
+      .t-port   { font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size: 11px; fill: #6d5bd0; }
+      .flow     { stroke: #a9b0c8; stroke-width: 1.6; fill: none; }
+      .flow-a   { stroke: #7f6ee0; stroke-width: 1.8; fill: none; }
+      .arrow    { fill: #a9b0c8; }
+      .arrow-a  { fill: #7f6ee0; }
+    </style>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrow"/>
+    </marker>
+    <marker id="aha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrow-a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="760" fill="#ffffff"/>
+
+  <!-- ============ Client ============ -->
+  <rect class="box" x="40" y="92" width="200" height="116" rx="14"/>
+  <text class="t-title" x="60" y="122">Browser</text>
+  <text class="t-sub" x="60" y="145">React 19 + TypeScript</text>
+  <text class="t-sub" x="60" y="163">Vite dev server</text>
+  <text class="t-port" x="60" y="188">:5173</text>
+
+  <!-- client -> backend -->
+  <path class="flow" d="M240,150 L292,150" marker-end="url(#ah)"/>
+  <text class="t-label" x="247" y="141">HTTP</text>
+
+  <!-- ============ Backend ============ -->
+  <rect class="panel" x="300" y="52" width="560" height="492" rx="16"/>
+  <text class="t-title" x="324" y="82">FastAPI Backend</text>
+  <text class="t-port" x="812" y="82" text-anchor="end">:8000</text>
+
+  <!-- middleware strip -->
+  <rect class="box" x="324" y="98" width="512" height="34" rx="9"/>
+  <text class="t-chip" x="440" y="120" text-anchor="middle">logging</text>
+  <text class="t-chip" x="580" y="120" text-anchor="middle">metrics</text>
+  <text class="t-chip" x="720" y="120" text-anchor="middle">rate limit</text>
+
+  <!-- LangGraph lane -->
+  <rect x="324" y="148" width="512" height="326" rx="12" fill="#f8f7ff" stroke="#e3ddfb" stroke-width="1.5"/>
+  <text class="t-label" x="340" y="168">LangGraph workflow</text>
+
+  <!-- memory_retrieval -->
+  <rect class="accent" x="344" y="180" width="472" height="36" rx="9"/>
+  <text class="t-chip" x="580" y="203" text-anchor="middle">memory_retrieval</text>
+
+  <!-- router -->
+  <rect class="accent" x="500" y="232" width="160" height="36" rx="9"/>
+  <text class="t-chip" x="580" y="255" text-anchor="middle">router</text>
+
+  <path class="flow-a" d="M580,216 L580,229" marker-end="url(#aha)"/>
+
+  <!-- agents 3 x 2 -->
+  <rect class="box" x="344" y="292" width="150" height="36" rx="9"/>
+  <text class="t-chip" x="419" y="315" text-anchor="middle">knowledge</text>
+  <rect class="box" x="505" y="292" width="150" height="36" rx="9"/>
+  <text class="t-chip" x="580" y="315" text-anchor="middle">coding</text>
+  <rect class="box" x="666" y="292" width="150" height="36" rx="9"/>
+  <text class="t-chip" x="741" y="315" text-anchor="middle">vision</text>
+
+  <rect class="box" x="344" y="340" width="150" height="36" rx="9"/>
+  <text class="t-chip" x="419" y="363" text-anchor="middle">roadmap</text>
+  <rect class="box" x="505" y="340" width="150" height="36" rx="9"/>
+  <text class="t-chip" x="580" y="363" text-anchor="middle">diagnosis</text>
+  <rect class="box" x="666" y="340" width="150" height="36" rx="9"/>
+  <text class="t-chip" x="741" y="363" text-anchor="middle">general</text>
+
+  <!-- router -> agents -->
+  <path class="flow" d="M580,268 L580,278 M419,278 L741,278 M419,278 L419,289 M580,278 L580,289 M741,278 L741,289"/>
+  <path class="flow" d="M419,288 L419,292 M580,288 L580,292 M741,288 L741,292" marker-end="url(#ah)"/>
+
+  <!-- reflection -->
+  <rect class="box" x="344" y="400" width="472" height="36" rx="9"/>
+  <text class="t-chip" x="580" y="423" text-anchor="middle">reflection  ·  retry ≤ 2, back to the same agent</text>
+
+  <!-- memory_update -->
+  <rect class="accent" x="344" y="446" width="472" height="36" rx="9"/>
+  <text class="t-chip" x="580" y="469" text-anchor="middle">memory_update</text>
+
+  <path class="flow" d="M419,376 L419,388 M580,376 L580,388 M741,376 L741,388 M419,388 L741,388 M580,388 L580,397" marker-end="url(#ah)"/>
+  <path class="flow" d="M580,436 L580,443" marker-end="url(#ah)"/>
+
+  <!-- ============ LightRAG ============ -->
+  <rect class="panel" x="920" y="92" width="240" height="150" rx="14"/>
+  <text class="t-title" x="940" y="120">LightRAG Server</text>
+  <text class="t-port" x="1140" y="120" text-anchor="end">:9621</text>
+  <text class="t-sub" x="940" y="146">Graph store</text>
+  <text class="t-label" x="1040" y="146">entities / relations</text>
+  <text class="t-sub" x="940" y="170">Vector index</text>
+  <text class="t-label" x="1020" y="170">local / global / hybrid</text>
+  <text class="t-label" x="940" y="200">Out-of-process: REST only, never imported</text>
+
+  <path class="flow" d="M860,168 L912,168" marker-end="url(#ah)"/>
+  <text class="t-label" x="864" y="158">REST</text>
+
+  <!-- ============ SQLite ============ -->
+  <rect class="panel" x="920" y="282" width="240" height="118" rx="14"/>
+  <text class="t-title" x="940" y="310">memory.db</text>
+  <text class="t-label" x="1058" y="310">SQLite</text>
+  <text class="t-sub" x="940" y="334">session memory</text>
+  <text class="t-sub" x="940" y="354">user profile</text>
+  <text class="t-sub" x="940" y="374">memory events + embeddings</text>
+
+  <path class="flow" d="M860,340 L912,340" marker-end="url(#ah)"/>
+
+  <!-- ============ LLM API ============ -->
+  <rect class="api" x="300" y="628" width="860" height="88" rx="14"/>
+  <text class="t-title" x="324" y="660">OpenAI-compatible LLM + Embedding API</text>
+  <text class="t-sub" x="324" y="684">Any provider works — swap models by editing .env, no code change</text>
+  <text class="t-label" x="324" y="703">main model for answers · light model for routing · embedding for semantic retrieval</text>
+
+  <path class="flow" d="M580,544 L580,624" marker-end="url(#ah)"/>
+  <text class="t-label" x="590" y="590">chat completion</text>
+
+  <!-- LightRAG -> LLM along the right margin -->
+  <path class="flow" d="M1160,170 L1186,170 L1186,672 L1164,672" marker-end="url(#ah)"/>
+
+  <!-- legend -->
+  <text class="t-label" x="40" y="700">Solid = request path</text>
+  <text class="t-label" x="40" y="720">Dashed = external service you bring</text>
+</svg>

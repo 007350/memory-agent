@@ -1,0 +1,19 @@
+# Normalize line endings so the repo behaves the same on Windows / macOS / Linux
+* text=auto eol=lf
+
+# Windows launcher must keep CRLF to run correctly
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# Binary assets
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.db    binary
+*.woff  binary
+*.woff2 binary
+
+# Keep lockfiles diff-friendly for reviewers (do not treat as generated)
+package-lock.json  linguist-generated=true

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>memory-agent — a multi-agent knowledge assistant that remembers you</title>
+<meta name="description" content="A multi-agent knowledge assistant for learning AI / CS, built on LangGraph + LightRAG + FastAPI + React. Graph RAG, three-layer memory, learning roadmaps and diagnosis.">
+<meta property="og:title" content="memory-agent">
+<meta property="og:description" content="Multi-agent knowledge assistant with graph RAG, long-term memory, and learning roadmaps.">
+<meta property="og:image" content="architecture.svg">
+<style>
+  :root{
+    --ink:#171a26; --body:#4a5068; --muted:#7d8397;
+    --line:#e4e7f2; --bg:#ffffff; --soft:#fafaff;
+    --accent:#6d5bd0; --accent-soft:#f3f0ff;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--body);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px}
+  header{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);z-index:9}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-weight:650;color:var(--ink);letter-spacing:-.01em}
+  .brand span{color:var(--accent)}
+  nav{display:flex;gap:20px;font-size:14px}
+  nav a{color:var(--body)}
+  .hero{padding:76px 0 56px;text-align:center}
+  .pill{display:inline-block;font-size:12.5px;color:var(--accent);background:var(--accent-soft);border:1px solid #ddd5fb;padding:4px 12px;border-radius:999px;margin-bottom:22px}
+  h1{margin:0 0 18px;font-size:clamp(30px,5vw,46px);line-height:1.18;letter-spacing:-.02em;color:var(--ink);font-weight:700}
+  h1 em{font-style:normal;color:var(--accent)}
+  .lede{font-size:17px;max-width:620px;margin:0 auto 30px;color:var(--body)}
+  .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-block;padding:11px 22px;border-radius:10px;font-size:14.5px;font-weight:550;border:1px solid var(--line);color:var(--ink);background:#fff;transition:.15s}
+  .btn:hover{text-decoration:none;border-color:#cfd4e6;transform:translateY(-1px)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:#5c4bc0;border-color:#5c4bc0}
+  section{padding:52px 0;border-top:1px solid var(--line)}
+  h2{font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 26px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+  .card h3{margin:0 0 8px;font-size:15.5px;color:var(--ink);font-weight:620}
+  .card p{margin:0;font-size:14px}
+  figure{margin:0}
+  figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+  pre{background:#161a26;color:#e8eaf2;padding:18px 20px;border-radius:12px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.7}
+  pre .c{color:#8b93a8}
+  pre .k{color:#b6a4ff}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.05em}
+  td code,code.inline{font-family:var(--mono);font-size:12.5px;background:var(--accent-soft);color:#4b3b9e;padding:2px 6px;border-radius:5px}
+  footer{border-top:1px solid var(--line);padding:32px 0 56px;font-size:13.5px;color:var(--muted)}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">memory<span>-agent</span></div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#start">Quickstart</a>
+      <a href="https://github.com/007350/memory-agent/blob/main/README.zh-CN.md">简体中文</a>
+      <a href="https://github.com/007350/memory-agent">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap hero">
+  <div class="pill">LangGraph · LightRAG · FastAPI · React 19</div>
+  <h1>A RAG assistant that<br><em>remembers you</em> and plans your learning</h1>
+  <p class="lede">
+    Most RAG demos stop at retrieve-then-answer. memory-agent routes each question to a specialised agent,
+    keeps a three-layer memory of who you are, and turns a topic into a tracked learning roadmap —
+    degrading gracefully when a dependency goes down.
+  </p>
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/007350/memory-agent">View on GitHub</a>
+    <a class="btn" href="#start">Quickstart</a>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <h2>What makes it different</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Multi-agent routing</h3>
+        <p>Six agents — knowledge, coding, vision, roadmap, diagnosis, general — with keyword fallbacks so intent-critical requests are never misrouted.</p>
+      </div>
+      <div class="card">
+        <h3>Graph RAG</h3>
+        <p>LightRAG builds an entity/relation graph behind a REST boundary. Local, global and hybrid retrieval, with automatic fallback to plain LLM answers.</p>
+      </div>
+      <div class="card">
+        <h3>Memory that decays</h3>
+        <p>Semantic similarity + character-bigram keyword coverage + importance + time decay. Re-phrased preferences collapse into one record; contradictions supersede the old one.</p>
+      </div>
+      <div class="card">
+        <h3>Roadmaps &amp; diagnosis</h3>
+        <p>Turn a topic into a validated 5–10 step plan you can tick off, then ask how you are actually doing and get strengths, weak spots and next steps.</p>
+      </div>
+      <div class="card">
+        <h3>Reflection with a way back</h3>
+        <p>A quality gate retries weakly grounded answers — and returns to the <em>originating</em> agent instead of silently rerouting to knowledge search.</p>
+      </div>
+      <div class="card">
+        <h3>Degrade, don't crash</h3>
+        <p>No vector store? Keyword retrieval. No embedding API? Redistributed weights. Every external dependency has a documented fallback path.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Architecture</h2>
+    <figure>
+      <img src="architecture.svg" alt="Architecture: React client, FastAPI + LangGraph backend with memory_retrieval, router, six agents, reflection and memory_update; LightRAG server; SQLite memory; OpenAI-compatible LLM and embedding API">
+    </figure>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2>Quickstart</h2>
+<pre><code><span class="c"># 1. install</span>
+git clone https://github.com/007350/memory-agent.git
+cd memory-agent &amp;&amp; python -m venv .venv
+source .venv/bin/activate          <span class="c"># Windows: .venv\Scripts\activate</span>
+pip install -r backend/requirements.txt
+pip install <span class="k">"lightrag-hku[api]==1.5.6"</span>
+(cd frontend &amp;&amp; npm install)
+
+<span class="c"># 2. configure — any OpenAI-compatible LLM + embedding endpoint</span>
+cp backend/.env.example  backend/.env
+cp lightrag/.env.example lightrag/.env
+
+<span class="c"># 3. run</span>
+./start.sh      <span class="c"># Windows: start.bat</span>
+<span class="c"># → http://localhost:5173</span></code></pre>
+    <p style="margin-top:18px;font-size:14px">
+      Docker users: <code class="inline">docker compose up</code>. Full options in the
+      <a href="https://github.com/007350/memory-agent#quickstart">README</a>.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Evaluation</h2>
+    <table>
+      <thead><tr><th>Category</th><th>Score</th><th>What it checks</th></tr></thead>
+      <tbody>
+        <tr><td>Simple QA</td><td>10/10</td><td>single-document recall</td></tr>
+        <tr><td>Cross-document</td><td>10/10</td><td>combining two sources</td></tr>
+        <tr><td>Multi-hop</td><td>5/5</td><td>chained reasoning over the graph</td></tr>
+        <tr><td>Unanswerable</td><td>5/5</td><td>refusing when the corpus has no answer</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13.5px;margin-top:14px;color:var(--muted)">
+      30 questions · 7 documents · retrieval hit rate 96% · average latency 27.4 s.
+      Numbers are a regression guard, not a benchmark.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>MIT licensed · © 2026 007350</div>
+    <div>
+      <a href="https://github.com/007350/memory-agent">GitHub</a> ·
+      <a href="https://github.com/007350/memory-agent/blob/main/README.zh-CN.md">简体中文文档</a> ·
+      <a href="https://github.com/007350/memory-agent/issues">Issues</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,98 +1,55 @@
-# Agentic RAG — 项目工程规范
+# CLAUDE.md — 工程约定
 
-## 项目简介
+给 AI 编码助手（Claude Code / Codex / Cursor 等）和人类贡献者看的项目约定。
+动手改代码前请先读一遍。
 
-面向 AI / Computer Science 学习和代码辅助的多 Agent 知识助手。
-基于 LangGraph + LightRAG + FastAPI + React 构建。
+## 项目是什么
 
-## 环境信息
+面向 AI / CS 学习与代码辅助的多 Agent 知识助手，技术栈：
 
-| 项目 | 值 |
-|------|----|
-| Python | 3.11.15 (D:/Dev/envs/lang/python.exe) |
-| Node | v24.16.0 |
-| LLM API | https://api.stepfun.com/step_plan/v1 |
-| LLM 模型 | step-3.7-flash (主力), step-3.5-flash (轻量) |
-| Embedding | 本地 HuggingFace 缓存 (C盘) |
+- **后端** FastAPI + LangGraph（`backend/app`）
+- **RAG** LightRAG Server，只通过 REST 调用（`backend/app/services/lightrag_client.py`），主应用不 import SDK
+- **前端** React 19 + TypeScript + Vite（`frontend/src`）
+- **记忆** SQLite（aiosqlite），三层：会话记忆 / 用户画像 / 记忆事件
 
-## 目录结构
+## 硬约束
+
+1. **密钥只走环境变量**。禁止在源码里写死 API Key、base URL、token；新增配置项同时更新 `backend/.env.example`。
+2. **模型名不硬编码**。统一从 `services/model_registry.py` 取，不信任 LLM 自己填的模型名。
+3. **LightRAG 保持进程外调用**。不要在 `app/` 里 `import lightrag`。
+4. **降级优先于崩溃**。LightRAG / Embedding 不可用时退化为纯 LLM 或关键词检索，并记 warning。
+5. **改动范围最小化**。不重构没被要求的部分，不动与本任务无关的文件。
+
+## 代码结构
 
 ```
-hackthon/
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── api/
-│   │   ├── agents/
-│   │   │   ├── router.py
-│   │   │   ├── knowledge_agent.py
-│   │   │   ├── coding_agent.py
-│   │   │   ├── vision_agent.py
-│   │   │   └── general_agent.py
-│   │   ├── services/
-│   │   │   ├── lightrag_client.py
-│   │   │   ├── memory_service.py
-│   │   │   ├── model_service.py
-│   │   │   ├── model_registry.py
-│   │   │   └── retrieval_service.py
-│   │   ├── models/
-│   │   ├── schemas/
-│   │   │   ├── lightrag.py
-│   │   │   ├── chat.py
-│   │   │   └── memory.py
-│   │   ├── graph/
-│   │   │   ├── state.py
-│   │   │   ├── nodes.py
-│   │   │   └── workflow.py
-│   │   └── config.py
-│   ├── tests/
-│   │   └── evaluation/
-│   ├── .env
-│   ├── .env.example
-│   └── requirements.txt
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   └── services/
-│   └── package.json
-├── lightrag/
-│   ├── data/
-│   └── .env
-├── .gitignore
-├── docker-compose.yml
-└── README.md
+backend/app/
+  main.py            FastAPI 装配：中间件、路由、生命周期
+  config.py          pydantic-settings，只读 env
+  graph/             LangGraph：state.py / nodes.py / workflow.py
+  agents/            router + 6 个 agent（knowledge/coding/vision/roadmap/diagnosis/general）
+  services/          lightrag_client / memory_service / embedding_service / model_registry
+  tools/             python_repl、web_search
+  routes/            chat / documents / memory / roadmap / health / metrics
+  middleware/        logging / metrics / rate_limit
 ```
 
-## 执行规范
+工作流：`memory_retrieval → router → <agent> → reflection → memory_update`。
+reflection 失败会回到**原 agent** 重试（最多 2 次），不会强行改路由。
 
-### Phase 顺序
-Phase 0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10
-每个 Phase 完成并通过测试后才能进入下一个。
+## 测试
 
-### 核心约束
-- 所有 API Key 通过 .env 管理，禁止写入源码
-- LightRAG 使用 Server + REST API 集成，不直接 import
-- 模型名称不硬编码在业务逻辑中，通过 ModelRegistry 管理
-- 改动范围最小化，不重构未被要求的部分
+```bash
+cd backend
+python -m pytest tests/ --ignore=tests/evaluation -q    # 单元测试，不触网
+python -m pytest tests/ -m integration                  # 需要 LightRAG 在 9621 运行
+```
 
-### API 配置
-- LightRAG 调用集中在 `backend/app/services/lightrag_client.py`
-- LightRAG base URL 从环境变量 LIGHTRAG_BASE_URL 读取
-- LLM API base URL 从环境变量 LLM_BASE_URL 读取
+- 测试**不触网**：LLM / HTTP 一律 mock，Embedding 用 fixture 关掉。
+- 数据库测试用 `tmp_path` 分配独立库文件，**不要**共用固定路径（残留数据会导致串扰）。
+- 新增功能必须带测试，且不能跳过失败用例进入下一步。
 
-### 模型配置
-- 主力模型: step-3.7-flash
-- 轻量模型: step-3.5-flash
-- Embedding: 本地模型（路径从 EMBEDDING_MODEL_PATH 读取）
-- Embedding 模型一旦建立索引，不要随意更换
+## Git
 
-### 测试规范
-- pytest 用于 backend 测试
-- 每个 Phase 必须有对应测试且全部通过
-- 不允许跳过失败测试直接进入下一 Phase
-
-### Git 规范
-- commit message 格式: `类型: 简要描述`
-- .env 文件必须在 .gitignore 中
-- lightrag/data/ 目录不进 Git
+- commit message：`类型: 简要描述`（feat / fix / docs / test / refactor / chore）
+- `.env`、`memory.db`、`lightrag/data/`、本地 AI 助手目录一律不进 Git

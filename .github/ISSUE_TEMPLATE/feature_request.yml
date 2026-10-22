@@ -1,0 +1,44 @@
+name: Feature request
+description: Propose a new agent, capability or behaviour change
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve
+      description: Describe the situation, not the solution. "When I ask X, the assistant does Y" beats "add a Z agent".
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: |
+        If it is a new agent, mention: what intent triggers it, what data it needs, and what it returns.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Prompt tweak? Router keyword? New tool instead of a new agent?
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - Small (prompt / config / UI tweak)
+        - Medium (new route or tool)
+        - Large (new agent or workflow change)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to open a PR for this
