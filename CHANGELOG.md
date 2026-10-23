@@ -22,7 +22,8 @@ First public release.
 - **Observability** — request/latency metrics, structured logging middleware, rate limiting.
 - **Evaluation** — 30-question end-to-end suite across four question categories.
 - **Ops** — cross-platform launchers (`start.bat`, `start.sh`) that auto-detect the interpreter, plus `docker-compose.yml`.
-- **Docs** — bilingual README (English / 简体中文), architecture diagram, contributing guide.
+- **CI** — GitHub Actions workflow: Python 3.11/3.12 matrix, an "import every module" smoke test so startup breakage fails CI, unit tests, frontend lint and build.
+- **Docs** — bilingual README (English / 简体中文), architecture diagram, contributing guide, and a Pages landing page at https://007350.github.io/memory-agent/.
 
 ### Fixed
 
@@ -30,6 +31,8 @@ First public release.
 - Roadmap and diagnosis intents are no longer misrouted to the knowledge agent, thanks to keyword fallbacks in the router.
 - `python_repl` subprocess quoting bug — errors now surface the exception type and stderr instead of a bare "Execution failed".
 - Test database isolation: memory tests now allocate a unique `tmp_path` database instead of sharing `.tmp/test_memory.db`, so a failed cleanup can no longer poison later runs.
+- `backend/requirements.txt` now includes `python-multipart`, without which `/documents/upload` made `app.main` fail at import time on a fresh install.
+- `test_missing_api_key` no longer clears the whole process environment, which crashed with a `ValueError` whenever a very long variable was present.
 - `backend/requirements.txt` no longer pulls the LightRAG SDK into the backend (it is only ever called over REST), cutting install time substantially.
 - `start.bat` no longer hardcodes an absolute virtualenv path and repository location.
 
